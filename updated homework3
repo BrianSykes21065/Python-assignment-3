@@ -1,0 +1,113 @@
+#Assignment 3
+run = True
+courseDictionary = dict()
+studentDictionary = dict()
+        
+def menu():
+    print("-------------------------------\n")
+    print("   Student/course Dictionary   \n")
+    print("-------------------------------\n")    
+    print("(1)Add a Course\n")
+    print("(2)Delete a Course\n")
+    print("(3)Add a Student\n")
+    print("(4)Delete a Student\n")
+    print("(5)List all Courses\n")
+    print("(6)List all Students\n")
+    print("(7)Add a Course to Student\n")
+    print("(8)Delete a Course from Student\n")
+    print("(9)List Student Courses\n")
+    print("(0)QUIT\n")
+def addCourse(courseId, courseName):
+    courseDictionary[courseId] = courseName
+    print("You added", courseDictionary[courseId])
+def deleteCourse(courseId):
+    print("You deleted", courseDictionary[courseId])
+    del courseDictionary[courseId]
+def addStudent(studentId, studentName, studentMajor, studentEmail):
+    # Ensure the student doesn't already exist
+    if studentId not in studentDictionary:
+        studentDictionary[studentId] = {
+            "Name": studentName,
+            "Major": studentMajor,
+            "Email": studentEmail,
+            "Courses": []  # Initialize Courses as an empty list
+        }
+        print(f"Student added: {studentId}, {studentName}")
+    else:
+        print("Student ID already exists.")
+def deleteStudent(studentId):
+    print("You deleted", studentDictionary[studentId])
+    del studentDictionary[studentId]
+    # Add a course to a student's list of enrolled courses
+def addCourseToStudent(studentId, courseId):
+    # Check if both student and course exist and avoid's duplicate course entries
+    if studentId in studentDictionary and courseId in courseDictionary:
+        if courseId not in studentDictionary[studentId]["Courses"]:
+            studentDictionary[studentId]["Courses"].append(courseId)
+            print(f"You added {courseDictionary[courseId]} to {studentDictionary[studentId]['Name']}")
+        else:
+            print(f"{studentDictionary[studentId]['Name']} is already enrolled in {courseDictionary[courseId]}")
+    else:
+        print("Invalid Student ID or Course ID.")
+     # Remove a course from a student's list of enrolled courses
+def deleteCourseFromStudent(studentId, courseId):
+    if studentId in studentDictionary:
+        if courseId in studentDictionary[studentId]["Courses"]:
+            studentDictionary[studentId]["Courses"].remove(courseId)
+            print(f"Removed {courseId} from {studentDictionary[studentId]['Name']}")
+        else:
+            print(f"{studentDictionary[studentId]['Name']} is not enrolled in {courseId}")
+    else:
+        print("Invalid Student ID.")
+    # List all courses a student is currently enrolled in 
+def listStudentCourses(studentId):
+    if studentId in studentDictionary:
+        courses = studentDictionary[studentId]["Courses"]
+        if not courses:
+            print(f"{studentDictionary[studentId]['Name']} is not enrolled in any courses.")
+        else:
+            print(f"{studentDictionary[studentId]['Name']} is enrolled in:")
+            for cid in courses:
+                cname = courseDictionary.get(cid, "Unknown Course")
+                print(f" - {cid}: {cname}")
+    else:
+        print("Student ID not found.")
+
+while(run):
+    menu()
+    choice = input("Enter a number for your Choice\n")
+    if choice == "1":
+        courseId = input("Enter the Course ID of the Course you would like to add\n")
+        courseName = input("Enter the Name of the Course you are Adding\n")
+        addCourse(courseId, courseName)
+    elif choice == "2":
+        courseId = input("Enter the Course ID of the Course you would like to delete\n")
+        deleteCourse(courseId)
+    elif choice == "3":
+        studentId = input("Enter the Student ID of the student you would like to add\n")
+        studentName = input("Enter the name of the student you would like to add\n")
+        studentMajor = input("Enter the Major of the student you would like to add\n")
+        studentEmail = input("Enter the email of the student you would like to add\n")
+        addStudent(studentId, studentName, studentMajor, studentEmail)
+    elif choice == "4":
+        studentId = input("Enter the Student ID of the student you would like to delete")
+        deleteStudent(studentId)
+    elif choice == "5":
+        print(courseDictionary)
+    elif choice == "6":
+        print(studentDictionary)
+    elif choice == "7":
+        studentId = input("Enter the Student ID of the student you are adding a course too")
+        courseId = input("Enter the course ID you would like to add to the student")
+        addCourseToStudent(studentId, courseId)
+    elif choice == "8":
+        studentId = input("Enter the Student ID of the student you want to remove a course from\n")
+        courseId = input("Enter the Course ID to remove\n")
+        deleteCourseFromStudent(studentId, courseId)
+
+    elif choice == "9":
+        studentId = input("Enter the Student ID to list their courses\n")
+        listStudentCourses(studentId)
+    elif choice == "0":
+        print("Exiting the program. Goodbye!")
+        run = False
